@@ -1,12 +1,17 @@
 import Button from "../../UI/Button";
-import { useState } from "react";
-import { formikSchema, CourseInputs } from "../../Schemas/Schemas";
+import * as Yup from "yup";
+//import { useState } from "react";
+import { CourseInputs } from "../../Schemas/Schemas";
 import styled from "styled-components";
-import { Formik, Field } from "formik";
+import { Formik, Field, Form} from "formik";
 
 const FormControl = styled.div`
   margin: 0.5rem 0;
+  }
 `;
+const formikSchema = Yup.object().shape({
+  Course: Yup.string().required("Required *"),
+});
 
 const FlexDiv = styled.div`
   display: flex;
@@ -16,9 +21,6 @@ const FlexDiv = styled.div`
   justify-content: center;
 `;
 
-
-  
-
 const FormLabel = styled.label`
   font-weight: bold;
   display: block;
@@ -26,7 +28,8 @@ const FormLabel = styled.label`
 `;
 
 const CourseInput = (props: any) => {
-  const [enteredValue, setEnteredValue] = useState("");
+
+
   return (
     <Formik
       initialValues={{} as CourseInputs}
@@ -34,31 +37,33 @@ const CourseInput = (props: any) => {
       //Do the formSubmitHandler
       onSubmit={() => {}}
     >
-      {({ values }) => (
-        <form
+      {({ values, setFieldValue }) => (
+        <Form
           onSubmit={(e) => {
             e.preventDefault();
-            props.onAddGoal(enteredValue);
+            if (values.Course.trim().length === 0) {
+              alert('Please enter some text')
+            } else {
+              props.onAddGoal(values.Course);
+            }
           }}
         >
           <FlexDiv>
             <FormControl>
-              <FormLabel> Course Goal </FormLabel>
+              <FormLabel>Course Goal</FormLabel>
               <Field
                 variant="outlined"
+                type="text"
                 name="Course"
                 value={values.Course}
                 onChange={(e: any) => {
-                  setEnteredValue(e.target.value);
+                  setFieldValue("Course", e.target.value);
                 }}
               />
             </FormControl>
-
-
-              <Button type="submit"> Add Goal</Button>
-
+            <Button type="submit"> Add Goal</Button>
           </FlexDiv>
-        </form>
+        </Form>
       )}
     </Formik>
   );

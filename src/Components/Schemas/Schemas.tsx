@@ -7,5 +7,5 @@ export const formikSchema = yup.object().shape({
 
 
 export interface CourseInputs {
-    Course: String
+    Course: String;
 }
